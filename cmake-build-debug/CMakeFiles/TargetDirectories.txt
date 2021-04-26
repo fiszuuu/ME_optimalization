@@ -1,0 +1,3 @@
+C:/Users/JF/repozytoria/ME_optimalization/cmake-build-debug/CMakeFiles/metalsheet.dir
+C:/Users/JF/repozytoria/ME_optimalization/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/JF/repozytoria/ME_optimalization/cmake-build-debug/CMakeFiles/rebuild_cache.dir
