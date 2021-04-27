@@ -14,9 +14,12 @@ public:
     int y;
     int high;
     int width;
+    int quantity;
     int area ();
     void rotate();
     bool does_cross(MetalSheet& mt);
+    void write(ostream & os);
+    void read(istream & is);
 };
 
 //METODY MetalSheet
@@ -32,59 +35,67 @@ bool MetalSheet::does_cross(MetalSheet&mt)
         return true;
     return false;
 }
+void MetalSheet::write(ostream & os) {
+    os << quantity << ';'<< high << ';' << width << endl;
+}
+void MetalSheet::read(istream & is){
+    string s;
+    getline(is, s, ';');
+    quantity = atoi(s.c_str());
+    getline(is , s, ';');
+    high = atoi(s.c_str());
+    getline (is, s, ';');
+    width = atoi(s.c_str());
+}
 
 class ToOptimize
 {
     vector<MetalSheet> small;
     vector<MetalSheet> big;
-    int small_quantity;
 public:
-    void read(istream & is);
+    void read_small(istream & is);
+    void write_small(ostream & os);
 };
 
 //METODY ToOptimize
-void ToOptimize::read(istream &is) {
+void ToOptimize::read_small(istream &is) {
     string s;
     getline(is, s, ';');
     int i=0;
     while (is)
     {
-        getline(is , s, ';');
-        small[i].high = stoi(s);
-        getline (is, s, ';');
-        small[i].width = stoi(s);
-
+        MetalSheet ms;
+        ms.read(is);
+        if (!is)
+            return;
+        small.push_back(ms);
+        ++i;
     }
+}
+void ToOptimize::write_small(ostream &os)
+{
+    for(int i=0; i < small.size(); ++i)
+    {
+        small[i].write(os);
+    }
+}
 
+//TESTY
+
+void reading_from_file_test()
+{
+    ToOptimize test_tp;
+    ifstream file ("data.csv");
+    if (!file)
+    {
+        cerr << "ERROR: Opening the file didn't succeeded";
+        return;
+    }
+    test_tp.read_small(file);
+    test_tp.write_small(cout);
 }
 int main ()
 {
-    ifstream file("data.csv");
-    if (!file)
-    {
-        cout << "ERROR";
-        exit(1);
-    }
-    int tab[10];
-    int a;
-    string s, trah;
-    getline(file , trah, ';');
-    file >> tab[0];
-    file >> tab[1];
-    file >> tab[3];
-    for (int i=0; i < 3; i++)
-    {
-        cout<<tab[i]<< " ";
-    }
-    //getline(file, s);
-    //cout<<s<<endl;
-    //a = stoi(s);
-    /*int i =0;
-    while (getline(file, s ,';'))
-    {
-        tab[i]= stoi(s);
-        cout<<tab[i]<<endl;
-        i++;
-    }*/
+    reading_from_file_test();
     return 0;
 }
