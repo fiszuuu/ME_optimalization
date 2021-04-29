@@ -80,7 +80,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/classes.h">
+			<Option target="metalsheet"/>
+		</Unit>
 		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/metalsheet.cpp">
+			<Option target="metalsheet"/>
+		</Unit>
+		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/tests.h">
 			<Option target="metalsheet"/>
 		</Unit>
 		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/CMakeLists.txt">
