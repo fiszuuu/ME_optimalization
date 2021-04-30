@@ -47,14 +47,7 @@ void MetalSheet::read(istream & is){
     width = atoi(s.c_str());
 }
 
-int whole_area(const vector<MetalSheet>& metalsheets){
-    int area = 0;
-    for (auto metalsheet : metalsheets)
-    {
-        area += metalsheet.area() * metalsheet.quantity;
-    }
-    return area;
-}
+
 
 class OptimizedMetalSheet:public MetalSheet{
     int x;
@@ -77,7 +70,7 @@ public:
     void write_small(ostream & os);
     void read_big(istream & is);
     void write_big(ostream & os);
-    //static int whole_area(vector<MetalSheet> & metalsheets);
+    static int whole_area(vector<MetalSheet> & metalsheets = small);
     vector<MetalSheet> needed_big_sheets()const;
 };
 
@@ -123,7 +116,14 @@ void ToOptimize::write_big(ostream &os)
         metalSheet.write(os);
     }
 }
-
+static int ToOptimize::whole_area(vector<MetalSheet> & metalsheets){
+    int area = 0;
+    for (auto metalsheet : metalsheets)
+    {
+        area += metalsheet.area() * metalsheet.quantity;
+    }
+    return area;
+}
 vector<MetalSheet> ToOptimize::needed_big_sheets() const {
     vector<MetalSheet> needed_big_sheets, left_small_sheets = small;
 
