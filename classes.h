@@ -1,14 +1,7 @@
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <vector>
-
-using namespace std;
-
 #ifndef METALSHEET_CPP_CLASSES_H
 #define METALSHEET_CPP_CLASSES_H
 
-#endif //METALSHEET_CPP_CLASSES_H
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -47,8 +40,6 @@ void MetalSheet::read(istream & is){
     width = atoi(s.c_str());
 }
 
-
-
 class OptimizedMetalSheet:public MetalSheet{
     int x;
     int y;
@@ -61,80 +52,74 @@ bool OptimizedMetalSheet::does_cross(OptimizedMetalSheet & mt)
     return false;
 }
 
-class ToOptimize
-{
+class VectorOfSheets: public vector<MetalSheet>{
 public:
-    vector<MetalSheet> small;
-    vector<MetalSheet> big;
-    void read_small(istream & is);
-    void write_small(ostream & os);
-    void read_big(istream & is);
-    void write_big(ostream & os);
-    static int whole_area(vector<MetalSheet> & metalsheets = small);
-    vector<MetalSheet> needed_big_sheets()const;
+    void read(istream & is);
+    void write(ostream & os);
+    int whole_area()const;
+    void sort();
 };
+//METODY VectorOfMetalSheets
+void VectorOfSheets::read(istream &is) {
+    string s;
+    getline(is, s);
+    while (is)
+    {
+        MetalSheet ms;
+        ms.read(is);
+        if (!is)
+            return;
+        (*this).push_back(ms);
+    }
+}
 
-//METODY ToOptimize
-void ToOptimize::read_small(istream &is) {
-    string s;
-    getline(is, s);
-    while (is)
-    {
-        MetalSheet ms;
-        ms.read(is);
-        if (!is)
-            return;
-        small.push_back(ms);
-    }
-}
-void ToOptimize::write_small(ostream &os)
+void VectorOfSheets::write(ostream &os)
 {
-    for(auto & metalSheet : small)
+    for(auto & metalSheet : (*this))
     {
         metalSheet.write(os);
     }
 }
-void ToOptimize::read_big(istream &is)
-{
-    string s;
-    getline(is, s);
-    int i=0;
-    while (is)
-    {
-        MetalSheet ms;
-        ms.read(is);
-        if (!is)
-            return;
-        big.push_back(ms);
-        ++i;
-    }
-}
-void ToOptimize::write_big(ostream &os)
-{
-    for(auto & metalSheet : big)
-    {
-        metalSheet.write(os);
-    }
-}
-static int ToOptimize::whole_area(vector<MetalSheet> & metalsheets){
+
+int VectorOfSheets::whole_area() const {
     int area = 0;
-    for (auto metalsheet : metalsheets)
+    for (auto metalsheet :  (*this))
     {
         area += metalsheet.area() * metalsheet.quantity;
     }
     return area;
 }
-vector<MetalSheet> ToOptimize::needed_big_sheets() const {
-    vector<MetalSheet> needed_big_sheets, left_small_sheets = small;
+//by now no needed fast sort so it's bubble
+void VectorOfSheets::sort()
+{
+    for (int i=0; i<(*this).size()-1; ++i)
+    {
+        for (int j=0; j<(*this).size()-1-i; ++j)
+        {
+            if ((*this)[j].area() < (*this)[j+1].area())
+                ::swap((*this)[j], (*this)[j+1]);
+        }
+    }
+}
 
-    //int *areas_of_big_sheets = static_cast<int *>(malloc(sizeof(int) * big.size()));
+class ToOptimize
+{
+public:
+    VectorOfSheets small;
+    VectorOfSheets big;
+    VectorOfSheets needed_big_sheets()const;
+};
+
+
+VectorOfSheets ToOptimize::needed_big_sheets() const {
+    VectorOfSheets left_small_sheets = small, needed_big_sheets;
     int area_of_big_sheet;
     int area_of_left_smalls;
     for (int i=0; i < big.size(); ++i)
     {
         int quantity_big = 0;
         area_of_big_sheet = big[i].area();
-        area_of_left_smalls = whole_area(left_small_sheets);
+        area_of_left_smalls = left_small_sheets.whole_area();
         bool out_of_stock = true;
         while (area_of_left_smalls > 0 && out_of_stock)
         {
@@ -156,7 +141,7 @@ vector<MetalSheet> ToOptimize::needed_big_sheets() const {
             }
             if (quantity_big >= big[i].quantity)
             {
-                cerr << "ERROR: Out of stock, sheet number " << i << endl;
+                cerr << "ERROR: Out of stock, sheet number " << i+1 << " (" << big[i].high << "x" << big[i].width << ")" << endl;
                 out_of_stock = false;
                 break;
             }
@@ -171,4 +156,4 @@ vector<MetalSheet> ToOptimize::needed_big_sheets() const {
     }
     return needed_big_sheets;
 }
-
+#endif //METALSHEET_CPP_CLASSES_H

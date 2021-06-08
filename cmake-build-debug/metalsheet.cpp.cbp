@@ -83,6 +83,9 @@
 		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/classes.h">
 			<Option target="metalsheet"/>
 		</Unit>
+		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/mergesort.h">
+			<Option target="metalsheet"/>
+		</Unit>
 		<Unit filename="C:/Users/JF/repozytoria/ME_optimalization/metalsheet.cpp">
 			<Option target="metalsheet"/>
 		</Unit>

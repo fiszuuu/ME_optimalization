@@ -4,14 +4,14 @@
 #include <vector>
 #include "classes.h"
 #include "tests.h"
-
+#include <cmath>
 using namespace std;
 
 
 int main ()
 {
-    //reading_from_file_test();
-    //whole_area_test();
-    needed_big_sheets_test();
+    //test_VectorOfSheets();
+    //test_sort();
+    test_reading_from_file();
     return 0;
 }
